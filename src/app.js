@@ -1,10 +1,17 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable radix */
-const { request, response } = require('express');
+// const { request, response } = require('express');
 const express = require('express');
 const { sayHello, uppercase, lowercase, firstCharacters } = require('./lib/strings');
 const { add, subtract, multiply, divide, remainder } = require('./lib/numbers');
 const { negate, truthiness, isOdd, startsWith } = require('./lib/booleans');
+const {
+  getNthElement,
+  arrayToCSVString,
+  addToArray2,
+  elementsStartingWithAVowel,
+  removeNthElement2,
+} = require('./lib/arrays');
 
 const app = express();
 app.use(express.json());
@@ -128,5 +135,33 @@ app.get('/booleans/:word/starts-with/:char', (req, res) => {
   } else {
     res.status(200).json({ result: startsWith(char, word) });
   }
+});
+
+app.post('/arrays/element-at-index/:index', (req, res) => {
+  const index = req.params.index;
+  const arr = req.body.array;
+  res.status(200).json({ result: getNthElement(index, arr) });
+});
+
+app.post('/arrays/to-string', (req, res) => {
+  const arr = req.body.array;
+  res.status(200).json({ result: arrayToCSVString(arr) });
+});
+
+app.post('/arrays/append', (req, res) => {
+  const arr = req.body.array;
+  const element = req.body.value;
+  res.status(200).json({ result: addToArray2(element, arr) });
+});
+
+app.post('/arrays/starts-with-vowel', (req, res) => {
+  const arr = req.body.array;
+  res.status(200).json({ result: elementsStartingWithAVowel(arr) });
+});
+
+app.post('/arrays/remove-element', (req, res) => {
+  const arr = req.body.array;
+  const index = req.query.index;
+  res.status(200).json({ result: removeNthElement2(arr, index) });
 });
 module.exports = app;
